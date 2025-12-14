@@ -12,16 +12,15 @@
         
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #F8FAFC; /* Warm neutral light background */
+            background-color: #F8FAFC;
             color: #1E293B;
         }
 
-        /* Smooth scrolling */
         html {
             scroll-behavior: smooth;
         }
 
-        /* Chart Container Strict Styling */
+        /* Chart Container */
         .chart-container-wrapper {
             position: relative;
             width: 100%;
@@ -38,9 +37,9 @@
         .chart-canvas-box {
             position: relative;
             width: 100%;
-            max-width: 800px; /* Max width constraint */
-            height: 400px;    /* Base height */
-            max-height: 450px; /* Max height constraint */
+            max-width: 800px;
+            height: 400px;
+            max-height: 450px;
             margin: 0 auto;
         }
 
@@ -51,7 +50,7 @@
             }
         }
 
-        /* Custom Range Slider */
+        /* Range Slider */
         input[type=range] {
             -webkit-appearance: none;
             width: 100%;
@@ -62,7 +61,7 @@
             height: 20px;
             width: 20px;
             border-radius: 50%;
-            background: #00A651; /* KAO Green-ish */
+            background: #00A651;
             cursor: pointer;
             margin-top: -8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
@@ -75,7 +74,7 @@
             border-radius: 2px;
         }
 
-        /* Card Hover Effects */
+        /* Interactive Elements */
         .strategy-card {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
@@ -84,50 +83,15 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
 
-        .nav-active {
+        .lang-btn {
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .lang-btn.active {
             color: #00A651;
-            border-bottom: 2px solid #00A651;
-        }
-
-        /* AI Output Box Styling */
-        .ai-output-box {
-            position: relative;
-        }
-        .ai-output-box::before {
-            content: "GEMINI AI GENERATED";
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            font-size: 0.6rem;
-            font-weight: bold;
-            color: #94a3b8;
-            opacity: 0.5;
-            pointer-events: none;
-        }
-        .loading-pulse {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: .5; }
+            text-decoration: underline;
         }
     </style>
-    <!-- Chosen Palette: Eco-Tech Harmony (White #F8FAFC, KAO Green #00A651, Slate #1E293B, Gold #D4AF37) -->
-    <!-- Application Structure Plan:
-         1. Hero/Intro: Value proposition.
-         2. Sticky Nav: Easy access to 3 pillars.
-         3. Affiliate Section: "The Human Algorithm" - Interactive funnel & budget simulator.
-         4. AI Video Section: "Content Velocity" - Comparisons of Trad vs AI output. Includes Gemini API Demo.
-         5. Research Section: "Predictive Intelligence" - Market gap analysis via scatter plot. Includes Gemini API Demo.
-         6. Financial Summary: Cumulative GMV impact.
-    -->
-    <!-- Visualization & Content Choices:
-         - Affiliate: Funnel Chart (Chart.js)
-         - AI Video: Stacked Bar (Chart.js) + Gemini Script Generator
-         - Research: Bubble/Scatter (Plotly) + Gemini Strategy Analyzer
-         - Summary: Line Chart (Chart.js)
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 </head>
 <body class="antialiased">
 
@@ -136,15 +100,24 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center gap-2">
-                    <!-- Unicode Moon representing KAO symbol abstraction -->
                     <span class="text-2xl text-[#00A651]">☾</span> 
                     <span class="font-bold text-xl tracking-tight text-slate-800">KAO <span class="font-normal text-slate-500">Proposal 2026</span></span>
                 </div>
-                <div class="hidden md:flex space-x-8">
-                    <button onclick="scrollToSection('affiliate')" class="text-gray-600 hover:text-[#00A651] px-3 py-2 text-sm font-medium transition-colors">Affiliate Network</button>
-                    <button onclick="scrollToSection('ai-content')" class="text-gray-600 hover:text-[#00A651] px-3 py-2 text-sm font-medium transition-colors">AI Video (GMV Max)</button>
-                    <button onclick="scrollToSection('research')" class="text-gray-600 hover:text-[#00A651] px-3 py-2 text-sm font-medium transition-colors">MaxStart Research</button>
-                    <button onclick="scrollToSection('summary')" class="bg-[#00A651] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[#008c44] transition-colors shadow-lg shadow-green-500/30">Total Impact</button>
+                <div class="flex items-center space-x-6">
+                    <div class="hidden md:flex space-x-6">
+                        <button onclick="scrollToSection('affiliate')" class="text-gray-600 hover:text-[#00A651] text-sm font-medium transition-colors" data-i18n="nav_affiliate">Affiliate Network</button>
+                        <button onclick="scrollToSection('ai-content')" class="text-gray-600 hover:text-[#00A651] text-sm font-medium transition-colors" data-i18n="nav_ai">AI Video (GMV Max)</button>
+                        <button onclick="scrollToSection('research')" class="text-gray-600 hover:text-[#00A651] text-sm font-medium transition-colors" data-i18n="nav_research">MaxStart Research</button>
+                    </div>
+                    
+                    <!-- Language Switcher -->
+                    <div class="flex items-center gap-2 text-sm border-l pl-4 border-gray-300">
+                        <button onclick="setLanguage('en')" id="btn-en" class="lang-btn active text-slate-500 hover:text-slate-800">EN</button>
+                        <span class="text-gray-300">|</span>
+                        <button onclick="setLanguage('id')" id="btn-id" class="lang-btn text-slate-500 hover:text-slate-800">ID</button>
+                    </div>
+
+                    <button onclick="scrollToSection('summary')" class="hidden md:block bg-[#00A651] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[#008c44] transition-colors shadow-lg shadow-green-500/30" data-i18n="nav_impact">Total Impact</button>
                 </div>
             </div>
         </div>
@@ -153,32 +126,33 @@
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-20">
 
-        <!-- Header / Intro -->
+        <!-- Hero -->
         <section class="text-center space-y-6 max-w-4xl mx-auto">
-            <div class="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-[#008c44] text-xs font-semibold tracking-wide uppercase">
+            <div class="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-[#008c44] text-xs font-semibold tracking-wide uppercase" data-i18n="hero_badge">
                 Strategic Roadmap 2026
             </div>
             <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
-                The Era of <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#00A651] to-teal-500">Intelligent Commerce</span>
+                <span data-i18n="hero_title_pre">The Era of</span> 
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#00A651] to-teal-500" data-i18n="hero_title_highlight">Intelligent Commerce</span>
             </h1>
-            <p class="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            <p class="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed" data-i18n="hero_desc">
                 A proposal to integrate <strong>hyper-local affiliate communities</strong>, <strong>generative AI content</strong>, and <strong>predictive market research</strong> to drive double-digit GMV growth for KAO Indonesia.
             </p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-8">
                 <div class="p-6 bg-white rounded-xl border border-gray-100 shadow-sm">
                     <div class="text-3xl mb-2">🤝</div>
-                    <div class="font-bold text-slate-800">Community Trust</div>
-                    <div class="text-sm text-slate-500">Affiliate Decentralization</div>
+                    <div class="font-bold text-slate-800" data-i18n="card_1_title">Community Trust</div>
+                    <div class="text-sm text-slate-500" data-i18n="card_1_sub">Affiliate Decentralization</div>
                 </div>
                 <div class="p-6 bg-white rounded-xl border border-gray-100 shadow-sm">
                     <div class="text-3xl mb-2">⚡</div>
-                    <div class="font-bold text-slate-800">Production Velocity</div>
-                    <div class="text-sm text-slate-500">Gen-AI Video Factory</div>
+                    <div class="font-bold text-slate-800" data-i18n="card_2_title">Production Velocity</div>
+                    <div class="text-sm text-slate-500" data-i18n="card_2_sub">Gen-AI Video Factory</div>
                 </div>
                 <div class="p-6 bg-white rounded-xl border border-gray-100 shadow-sm">
                     <div class="text-3xl mb-2">🧠</div>
-                    <div class="font-bold text-slate-800">Precision Launch</div>
-                    <div class="text-sm text-slate-500">GMV MaxStart Data</div>
+                    <div class="font-bold text-slate-800" data-i18n="card_3_title">Precision Launch</div>
+                    <div class="text-sm text-slate-500" data-i18n="card_3_sub">GMV MaxStart Data</div>
                 </div>
             </div>
         </section>
@@ -191,235 +165,183 @@
                 <div>
                     <h2 class="text-3xl font-bold text-slate-900 mb-4 flex items-center gap-3">
                         <span class="flex items-center justify-center w-10 h-10 rounded-lg bg-blue-100 text-blue-600 text-xl">1</span>
-                        Affiliate Strategy: The Micro-Force
+                        <span data-i18n="aff_title">Affiliate Strategy: The Micro-Force</span>
                     </h2>
-                    <p class="text-slate-600 mb-6 leading-relaxed">
-                        Traditional macro-influencers offer reach but declining engagement. Our 2026 strategy pivots to a <strong>"Swarm Architecture"</strong>: activating thousands of nano-affiliates (KOLs with 1k-10k followers) who hold authentic trust within niche communities (Parenting, Eco-conscious, Beauty Enthusiasts).
+                    <p class="text-slate-600 mb-6 leading-relaxed" data-i18n="aff_desc">
+                        Traditional macro-influencers offer reach but declining engagement. Our 2026 strategy pivots to a <strong>"Swarm Architecture"</strong>: activating thousands of nano-affiliates (KOLs with 1k-10k followers) who hold authentic trust within niche communities.
                     </p>
                     <ul class="space-y-3 mb-8">
                         <li class="flex items-start gap-3 text-sm text-slate-700">
                             <span class="text-green-500 mt-0.5">✔</span>
-                            <span><strong>Trust-Based Conversion:</strong> Nano-KOLs convert 3.5x higher than celebrities.</span>
+                            <span data-i18n="aff_point_1"><strong>Trust-Based Conversion:</strong> Nano-KOLs convert 3.5x higher than celebrities.</span>
                         </li>
                         <li class="flex items-start gap-3 text-sm text-slate-700">
                             <span class="text-green-500 mt-0.5">✔</span>
-                            <span><strong>Cost Efficiency:</strong> Shift budget from high fixed fees to commission-based performance (CPA).</span>
+                            <span data-i18n="aff_point_2"><strong>Cost Efficiency:</strong> Shift budget from high fixed fees to commission-based performance (CPA).</span>
                         </li>
                         <li class="flex items-start gap-3 text-sm text-slate-700">
                             <span class="text-green-500 mt-0.5">✔</span>
-                            <span><strong>Platform Agnostic:</strong> Rapid deployment across TikTok Shop, Shopee Video, and IG Reels.</span>
+                            <span data-i18n="aff_point_3"><strong>Platform Agnostic:</strong> Rapid deployment across TikTok Shop, Shopee Video, and IG Reels.</span>
                         </li>
                     </ul>
                 </div>
                 <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100">
-                    <h3 class="font-bold text-slate-800 mb-4">Affiliate Network Growth Simulator</h3>
+                    <h3 class="font-bold text-slate-800 mb-4" data-i18n="aff_sim_title">Affiliate Network Growth Simulator</h3>
                     <div class="space-y-6">
                         <div>
                             <div class="flex justify-between text-sm font-medium mb-2">
-                                <label>Active Nano-Affiliates</label>
+                                <label data-i18n="aff_sim_label_1">Active Nano-Affiliates</label>
                                 <span id="affiliate-count-val" class="text-blue-600">500</span>
                             </div>
                             <input type="range" id="affiliate-slider" min="100" max="2000" step="50" value="500" class="w-full">
                         </div>
                         <div>
                             <div class="flex justify-between text-sm font-medium mb-2">
-                                <label>Avg. Conversion Rate (%)</label>
+                                <label data-i18n="aff_sim_label_2">Avg. Conversion Rate (%)</label>
                                 <span id="conv-rate-val" class="text-blue-600">2.5%</span>
                             </div>
                             <input type="range" id="conv-slider" min="1.0" max="6.0" step="0.1" value="2.5" class="w-full">
                         </div>
                         <div class="p-4 bg-white rounded-xl shadow-sm flex justify-between items-center">
-                            <span class="text-sm text-gray-500">Projected Monthly Revenue</span>
+                            <span class="text-sm text-gray-500" data-i18n="aff_sim_result">Projected Monthly Revenue</span>
                             <span id="proj-rev-val" class="text-2xl font-bold text-slate-900">IDR 1.25B</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Chart Container -->
             <div class="chart-container-wrapper">
-                <h4 class="text-lg font-semibold text-slate-800 mb-4 w-full text-left">Funnel Efficiency: Macro vs. Nano Strategy</h4>
+                <h4 class="text-lg font-semibold text-slate-800 mb-4 w-full text-left" data-i18n="aff_chart_title">Funnel Efficiency: Macro vs. Nano Strategy</h4>
                 <div class="chart-canvas-box">
                     <canvas id="affiliateChart"></canvas>
                 </div>
-                <p class="text-xs text-gray-400 mt-3 w-full text-center">Data modeled on 2024 industry averages for FMCG/Beauty sector in Indonesia.</p>
+                <p class="text-xs text-gray-400 mt-3 w-full text-center" data-i18n="aff_chart_note">Data modeled on 2024 industry averages for FMCG/Beauty sector in Indonesia.</p>
             </div>
         </section>
 
-        <!-- Strategy 2: AI Video Content -->
+        <!-- Strategy 2: AI Video -->
         <section id="ai-content" class="scroll-mt-24">
             <div class="mb-8">
                 <h2 class="text-3xl font-bold text-slate-900 mb-4 flex items-center gap-3">
                     <span class="flex items-center justify-center w-10 h-10 rounded-lg bg-purple-100 text-purple-600 text-xl">2</span>
-                    AI Video: GMV Max Boost
+                    <span data-i18n="ai_title">AI Video: GMV Max Boost</span>
                 </h2>
-                <p class="text-slate-600 max-w-3xl leading-relaxed">
+                <p class="text-slate-600 max-w-3xl leading-relaxed" data-i18n="ai_desc">
                     To dominate "Shoppertainment," volume and relevance are key. We propose an <strong>AI-First Content Engine</strong> that generates high-fidelity product videos tailored to specific demographics, dialects, and trends.
                 </p>
             </div>
 
             <div class="grid lg:grid-cols-3 gap-8">
-                <!-- Control Panel -->
-                <div class="lg:col-span-1 space-y-6">
-                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                        <h3 class="font-bold text-slate-800 mb-4 border-b pb-2">Production Metrics</h3>
-                        <p class="text-sm text-gray-500 mb-6">Select a production mode to see the impact on cost and output velocity for a 1-month campaign.</p>
+                <div class="lg:col-span-1 space-y-4">
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm h-full">
+                        <h3 class="font-bold text-slate-800 mb-4 border-b pb-2" data-i18n="ai_panel_title">Production Metrics</h3>
+                        <p class="text-sm text-gray-500 mb-6" data-i18n="ai_panel_desc">Select a production mode to see the impact on cost and output velocity for a 1-month campaign.</p>
                         
                         <div class="space-y-3">
                             <button onclick="updateAIChart('traditional')" class="w-full text-left px-4 py-3 rounded-lg border hover:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200 transition-all bg-gray-50 group ai-btn active" data-mode="traditional">
                                 <div class="flex justify-between items-center">
-                                    <span class="font-semibold text-slate-700">Traditional Agency</span>
-                                    <span class="text-xs bg-gray-200 px-2 py-1 rounded">Baseline</span>
+                                    <span class="font-semibold text-slate-700" data-i18n="ai_btn_1_title">Traditional Agency</span>
+                                    <span class="text-xs bg-gray-200 px-2 py-1 rounded" data-i18n="ai_btn_1_badge">Baseline</span>
                                 </div>
-                                <div class="text-xs text-gray-500 mt-1">High quality, slow turnaround, high cost.</div>
+                                <div class="text-xs text-gray-500 mt-1" data-i18n="ai_btn_1_desc">High quality, slow turnaround, high cost.</div>
                             </button>
 
                             <button onclick="updateAIChart('hybrid')" class="w-full text-left px-4 py-3 rounded-lg border hover:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200 transition-all bg-white group ai-btn" data-mode="hybrid">
                                 <div class="flex justify-between items-center">
-                                    <span class="font-semibold text-slate-700">Hybrid Model</span>
-                                    <span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">Optimized</span>
+                                    <span class="font-semibold text-slate-700" data-i18n="ai_btn_2_title">Hybrid Model</span>
+                                    <span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded" data-i18n="ai_btn_2_badge">Optimized</span>
                                 </div>
-                                <div class="text-xs text-gray-500 mt-1">Human creative + AI editing tools.</div>
+                                <div class="text-xs text-gray-500 mt-1" data-i18n="ai_btn_2_desc">Human creative + AI editing tools.</div>
                             </button>
 
                             <button onclick="updateAIChart('ai-native')" class="w-full text-left px-4 py-3 rounded-lg border hover:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200 transition-all bg-white group ai-btn" data-mode="ai-native">
                                 <div class="flex justify-between items-center">
-                                    <span class="font-semibold text-slate-700">AI-Native Engine</span>
-                                    <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">2026 Goal</span>
+                                    <span class="font-semibold text-slate-700" data-i18n="ai_btn_3_title">AI-Native Engine</span>
+                                    <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded" data-i18n="ai_btn_3_badge">2026 Goal</span>
                                 </div>
-                                <div class="text-xs text-gray-500 mt-1">Generative avatars, synthetic voice, automated A/B.</div>
+                                <div class="text-xs text-gray-500 mt-1" data-i18n="ai_btn_3_desc">Generative avatars, synthetic voice, automated A/B.</div>
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Visualization & AI Tool -->
-                <div class="lg:col-span-2 space-y-6">
-                    <div class="chart-container-wrapper">
+                <div class="lg:col-span-2">
+                    <div class="chart-container-wrapper h-full">
                         <div class="flex justify-between w-full items-center mb-4">
-                            <h4 class="text-lg font-semibold text-slate-800">Efficiency Comparison</h4>
+                            <h4 class="text-lg font-semibold text-slate-800" data-i18n="ai_chart_title">Efficiency Comparison</h4>
                             <div class="flex gap-2 text-xs">
-                                <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-purple-500"></span> Cost (IDR Mio)</span>
-                                <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-teal-400"></span> Videos Produced</span>
+                                <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-purple-500"></span> <span data-i18n="ai_legend_cost">Cost (IDR Mio)</span></span>
+                                <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-teal-400"></span> <span data-i18n="ai_legend_vol">Videos Produced</span></span>
                             </div>
                         </div>
                         <div class="chart-canvas-box">
                             <canvas id="aiVideoChart"></canvas>
                         </div>
                     </div>
-
-                    <!-- GEMINI API INTEGRATION 1: SCRIPT GENERATOR -->
-                    <div class="bg-gradient-to-r from-purple-50 to-white p-6 rounded-xl border border-purple-100 shadow-sm">
-                        <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
-                            <span class="text-xl">✨</span> Live Demo: AI Script Generator
-                        </h3>
-                        <p class="text-sm text-slate-600 mb-4">Experience the "Content Engine" now. Generate a viral-optimized script for a KAO product instantly using Gemini.</p>
-                        
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div class="space-y-3">
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-500 mb-1">Product</label>
-                                    <input type="text" id="script-product" placeholder="e.g. Biore UV Aqua Rich" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-purple-200 focus:border-purple-400 outline-none transition">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-500 mb-1">Target Audience / Angle</label>
-                                    <input type="text" id="script-audience" placeholder="e.g. Gamers who hate sticky skin" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-purple-200 focus:border-purple-400 outline-none transition">
-                                </div>
-                                <button onclick="generateScript()" class="w-full bg-purple-600 text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-purple-700 transition shadow-md shadow-purple-500/20 flex justify-center items-center gap-2">
-                                    <span>✨ Generate Script</span>
-                                </button>
-                            </div>
-                            <div id="script-output" class="ai-output-box bg-white p-4 rounded-lg border border-gray-200 text-xs text-slate-600 h-48 overflow-y-auto whitespace-pre-wrap leading-relaxed">Generated script will appear here...</div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Strategy 3: GMV MaxStart Research -->
+        <!-- Strategy 3: Research -->
         <section id="research" class="scroll-mt-24">
             <div class="grid md:grid-cols-2 gap-12 mb-6">
                 <div>
                     <h2 class="text-3xl font-bold text-slate-900 mb-4 flex items-center gap-3">
                         <span class="flex items-center justify-center w-10 h-10 rounded-lg bg-amber-100 text-amber-600 text-xl">3</span>
-                        GMV MaxStart Research
+                        <span data-i18n="res_title">GMV MaxStart Research</span>
                     </h2>
-                    <p class="text-slate-600 leading-relaxed">
+                    <p class="text-slate-600 leading-relaxed" data-i18n="res_desc">
                         Launching a product without data is a gamble. <strong>GMV MaxStart</strong> is our proprietary research framework. By scraping marketplace data (price points, keyword volume, sentiment), we identify "Blue Ocean" opportunities for KAO brands before launch day.
                     </p>
                 </div>
                 <div class="bg-amber-50 p-5 rounded-xl border border-amber-100 text-sm">
-                    <h4 class="font-bold text-amber-800 mb-2">Key Metric: Opportunity Score</h4>
+                    <h4 class="font-bold text-amber-800 mb-2" data-i18n="res_metric_title">Key Metric: Opportunity Score</h4>
                     <p class="text-slate-700">
-                        Calculated via: <br>
+                        <span data-i18n="res_calc">Calculated via:</span> <br>
                         <code>(Search Volume x Conversion Potential) / Competition Density</code>
                     </p>
                     <div class="mt-4 flex gap-2">
-                        <button class="bg-white border border-amber-200 text-amber-700 px-3 py-1 rounded-full hover:bg-amber-100 transition" onclick="filterResearch('Skin')">Skin Care (Biore)</button>
-                        <button class="bg-white border-amber-200 text-amber-700 px-3 py-1 rounded-full hover:bg-amber-100 transition" onclick="filterResearch('Home')">Home Care (Attack)</button>
-                        <button class="bg-white border-amber-200 text-amber-700 px-3 py-1 rounded-full hover:bg-amber-100 transition" onclick="filterResearch('All')">Show All</button>
+                        <button class="bg-white border border-amber-200 text-amber-700 px-3 py-1 rounded-full hover:bg-amber-100 transition" onclick="filterResearch('Skin')" data-i18n="res_btn_skin">Skin Care (Biore)</button>
+                        <button class="bg-white border-amber-200 text-amber-700 px-3 py-1 rounded-full hover:bg-amber-100 transition" onclick="filterResearch('Home')" data-i18n="res_btn_home">Home Care (Attack)</button>
+                        <button class="bg-white border-amber-200 text-amber-700 px-3 py-1 rounded-full hover:bg-amber-100 transition" onclick="filterResearch('All')" data-i18n="res_btn_all">Show All</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Plotly Container -->
-            <div class="space-y-6">
-                <div class="chart-container-wrapper">
-                    <h4 class="text-lg font-semibold text-slate-800 mb-2 w-full">Market Opportunity Matrix</h4>
-                    <p class="text-sm text-gray-500 mb-4 w-full">Y-Axis: Monthly Search Volume | X-Axis: Avg Market Price (IDR) | Bubble Size: Revenue Potential</p>
-                    <!-- Using a specific ID for Plotly -->
-                    <div id="researchPlot" class="w-full h-[450px]"></div>
-                </div>
-
-                <!-- GEMINI API INTEGRATION 2: STRATEGY ANALYZER -->
-                <div class="bg-gradient-to-r from-amber-50 to-white p-6 rounded-xl border border-amber-100 shadow-sm">
-                    <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
-                        <span class="text-xl">✨</span> MaxStart Opportunity Analyzer
-                    </h3>
-                    <p class="text-sm text-slate-600 mb-4">Simulate the "Predictive Intelligence" layer. Enter a market gap or product concept, and Gemini will generate a rapid launch strategy.</p>
-                    
-                    <div class="flex flex-col md:flex-row gap-4">
-                         <div class="flex-1">
-                             <input type="text" id="strategy-topic" placeholder="e.g. Eco-friendly liquid detergent for sensitive skin" class="w-full h-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-amber-200 focus:border-amber-400 outline-none transition">
-                         </div>
-                         <button onclick="generateStrategy()" class="bg-amber-600 text-white px-8 py-3 rounded-lg text-sm font-semibold hover:bg-amber-700 transition shadow-md shadow-amber-500/20 whitespace-nowrap flex items-center gap-2 justify-center">
-                             <span>✨ Analyze Opportunity</span>
-                         </button>
-                    </div>
-                    <div id="strategy-output" class="ai-output-box mt-4 bg-white p-6 rounded-lg border border-gray-200 text-sm text-slate-700 min-h-[120px] whitespace-pre-wrap leading-relaxed">Strategic analysis will appear here...</div>
-                </div>
+            <div class="chart-container-wrapper">
+                <h4 class="text-lg font-semibold text-slate-800 mb-2 w-full" data-i18n="res_chart_title">Market Opportunity Matrix</h4>
+                <p class="text-sm text-gray-500 mb-4 w-full" data-i18n="res_chart_axes">Y-Axis: Monthly Search Volume | X-Axis: Avg Market Price (IDR) | Bubble Size: Revenue Potential</p>
+                <div id="researchPlot" class="w-full h-[450px]"></div>
             </div>
         </section>
 
-        <!-- Summary / Bottom Line -->
+        <!-- Summary -->
         <section id="summary" class="bg-slate-900 text-white rounded-3xl p-8 md:p-12 shadow-2xl scroll-mt-24">
             <div class="text-center mb-10">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">2026 Projected Impact</h2>
-                <p class="text-slate-400 max-w-2xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4" data-i18n="sum_title">2026 Projected Impact</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto" data-i18n="sum_desc">
                     By synergizing these three pillars, we project a cumulative GMV uplift of <span class="text-green-400 font-bold">32%</span> YoY, outpacing the category average growth of 12%.
                 </p>
             </div>
 
             <div class="grid lg:grid-cols-3 gap-8 items-center">
-                <!-- Stats Cards -->
                 <div class="space-y-4">
                     <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700">
-                        <div class="text-sm text-slate-400 mb-1">Estimated 2026 GMV</div>
+                        <div class="text-sm text-slate-400 mb-1" data-i18n="sum_stat_1_label">Estimated 2026 GMV</div>
                         <div class="text-3xl font-bold text-white">IDR <span class="text-green-400 counter">485</span> Bn</div>
                         <div class="text-xs text-green-500 mt-2 flex items-center">
-                            <span>▲ 32% vs 2025 Baseline</span>
+                            <span data-i18n="sum_stat_1_sub">▲ 32% vs 2025 Baseline</span>
                         </div>
                     </div>
                     <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700">
-                        <div class="text-sm text-slate-400 mb-1">Marketing Cost Ratio</div>
+                        <div class="text-sm text-slate-400 mb-1" data-i18n="sum_stat_2_label">Marketing Cost Ratio</div>
                         <div class="text-3xl font-bold text-white">14.2%</div>
                         <div class="text-xs text-green-500 mt-2 flex items-center">
-                            <span>▼ 3.5% Efficiency Gain (via AI)</span>
+                            <span data-i18n="sum_stat_2_sub">▼ 3.5% Efficiency Gain (via AI)</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Final Chart -->
                 <div class="lg:col-span-2">
                     <div class="relative w-full h-80">
                         <canvas id="growthChart"></canvas>
@@ -428,10 +350,10 @@
             </div>
 
             <div class="mt-12 text-center">
-                <button class="bg-[#00A651] hover:bg-[#008c44] text-white text-lg font-semibold px-8 py-4 rounded-full shadow-lg shadow-green-500/20 transition-transform transform hover:scale-105">
+                <a href="https://docs.google.com/presentation/d/1ByYaJ0inaIWY3C7nDIPr4fIYFjJyRxzICqVcSsBxUVA/edit?usp=sharing" target="_blank" class="inline-block bg-[#00A651] hover:bg-[#008c44] text-white text-lg font-semibold px-8 py-4 rounded-full shadow-lg shadow-green-500/20 transition-transform transform hover:scale-105" data-i18n="btn_download">
                     Download Full Executive Deck
-                </button>
-                <p class="mt-4 text-xs text-slate-500">Confidential Proposal for KAO Indonesia. Generated for 2026 Planning Cycle.</p>
+                </a>
+                <p class="mt-4 text-xs text-slate-500" data-i18n="footer_note">Confidential Proposal for KAO Indonesia. Generated for 2026 Planning Cycle.</p>
             </div>
         </section>
 
@@ -439,85 +361,203 @@
 
     <!-- Scripts -->
     <script>
-        // --- GEMINI API CONFIGURATION ---
-        const apiKey = "gen-lang-client-0013941027"; // System will provide key at runtime
-        
-        async function callGemini(prompt, systemInstruction = "") {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+        // --- TRANSLATION DATA ---
+        const translations = {
+            en: {
+                nav_affiliate: "Affiliate Network",
+                nav_ai: "AI Video (GMV Max)",
+                nav_research: "MaxStart Research",
+                nav_impact: "Total Impact",
+                hero_badge: "Strategic Roadmap 2026",
+                hero_title_pre: "The Era of",
+                hero_title_highlight: "Intelligent Commerce",
+                hero_desc: "A proposal to integrate <strong>hyper-local affiliate communities</strong>, <strong>generative AI content</strong>, and <strong>predictive market research</strong> to drive double-digit GMV growth for KAO Indonesia.",
+                card_1_title: "Community Trust",
+                card_1_sub: "Affiliate Decentralization",
+                card_2_title: "Production Velocity",
+                card_2_sub: "Gen-AI Video Factory",
+                card_3_title: "Precision Launch",
+                card_3_sub: "GMV MaxStart Data",
+                aff_title: "Affiliate Strategy: The Micro-Force",
+                aff_desc: "Traditional macro-influencers offer reach but declining engagement. Our 2026 strategy pivots to a <strong>\"Swarm Architecture\"</strong>: activating thousands of nano-affiliates (KOLs with 1k-10k followers) who hold authentic trust within niche communities.",
+                aff_point_1: "<strong>Trust-Based Conversion:</strong> Nano-KOLs convert 3.5x higher than celebrities.",
+                aff_point_2: "<strong>Cost Efficiency:</strong> Shift budget from high fixed fees to commission-based performance (CPA).",
+                aff_point_3: "<strong>Platform Agnostic:</strong> Rapid deployment across TikTok Shop, Shopee Video, and IG Reels.",
+                aff_sim_title: "Affiliate Network Growth Simulator",
+                aff_sim_label_1: "Active Nano-Affiliates",
+                aff_sim_label_2: "Avg. Conversion Rate (%)",
+                aff_sim_result: "Projected Monthly Revenue",
+                aff_chart_title: "Funnel Efficiency: Macro vs. Nano Strategy",
+                aff_chart_note: "Data modeled on 2024 industry averages for FMCG/Beauty sector in Indonesia.",
+                ai_title: "AI Video: GMV Max Boost",
+                ai_desc: "To dominate \"Shoppertainment,\" volume and relevance are key. We propose an <strong>AI-First Content Engine</strong> that generates high-fidelity product videos tailored to specific demographics, dialects, and trends.",
+                ai_panel_title: "Production Metrics",
+                ai_panel_desc: "Select a production mode to see the impact on cost and output velocity for a 1-month campaign.",
+                ai_btn_1_title: "Traditional Agency",
+                ai_btn_1_badge: "Baseline",
+                ai_btn_1_desc: "High quality, slow turnaround, high cost.",
+                ai_btn_2_title: "Hybrid Model",
+                ai_btn_2_badge: "Optimized",
+                ai_btn_2_desc: "Human creative + AI editing tools.",
+                ai_btn_3_title: "AI-Native Engine",
+                ai_btn_3_badge: "2026 Goal",
+                ai_btn_3_desc: "Generative avatars, synthetic voice, automated A/B.",
+                ai_chart_title: "Efficiency Comparison",
+                ai_legend_cost: "Cost (IDR Mio)",
+                ai_legend_vol: "Videos Produced",
+                res_title: "GMV MaxStart Research",
+                res_desc: "Launching a product without data is a gamble. <strong>GMV MaxStart</strong> is our proprietary research framework. By scraping marketplace data (price points, keyword volume, sentiment), we identify \"Blue Ocean\" opportunities for KAO brands before launch day.",
+                res_metric_title: "Key Metric: Opportunity Score",
+                res_calc: "Calculated via:",
+                res_btn_skin: "Skin Care (Biore)",
+                res_btn_home: "Home Care (Attack)",
+                res_btn_all: "Show All",
+                res_chart_title: "Market Opportunity Matrix",
+                res_chart_axes: "Y-Axis: Monthly Search Volume | X-Axis: Avg Market Price (IDR) | Bubble Size: Revenue Potential",
+                sum_title: "2026 Projected Impact",
+                sum_desc: "By synergizing these three pillars, we project a cumulative GMV uplift of <span class=\"text-green-400 font-bold\">32%</span> YoY, outpacing the category average growth of 12%.",
+                sum_stat_1_label: "Estimated 2026 GMV",
+                sum_stat_1_sub: "▲ 32% vs 2025 Baseline",
+                sum_stat_2_label: "Marketing Cost Ratio",
+                sum_stat_2_sub: "▼ 3.5% Efficiency Gain (via AI)",
+                btn_download: "Download Full Executive Deck",
+                footer_note: "Confidential Proposal for KAO Indonesia. Generated for 2026 Planning Cycle."
+            },
+            id: {
+                nav_affiliate: "Jaringan Afiliasi",
+                nav_ai: "Video AI (GMV Max)",
+                nav_research: "Riset MaxStart",
+                nav_impact: "Total Dampak",
+                hero_badge: "Peta Jalan Strategis 2026",
+                hero_title_pre: "Era Baru",
+                hero_title_highlight: "Perdagangan Cerdas",
+                hero_desc: "Proposal untuk mengintegrasikan <strong>komunitas afiliasi hyper-local</strong>, <strong>konten generatif AI</strong>, dan <strong>riset pasar prediktif</strong> guna mendorong pertumbuhan GMV dua digit untuk KAO Indonesia.",
+                card_1_title: "Kepercayaan Komunitas",
+                card_1_sub: "Desentralisasi Afiliasi",
+                card_2_title: "Kecepatan Produksi",
+                card_2_sub: "Pabrik Video Gen-AI",
+                card_3_title: "Peluncuran Presisi",
+                card_3_sub: "Data GMV MaxStart",
+                aff_title: "Strategi Afiliasi: Kekuatan Mikro",
+                aff_desc: "Influencer makro tradisional menawarkan jangkauan tetapi interaksi menurun. Strategi 2026 kami beralih ke <strong>\"Arsitektur Kerumunan\"</strong>: mengaktifkan ribuan nano-afiliasi (KOL dengan 1k-10k pengikut) yang memegang kepercayaan otentik dalam komunitas khusus.",
+                aff_point_1: "<strong>Konversi Berbasis Kepercayaan:</strong> Nano-KOL mengonversi 3.5x lebih tinggi dari selebriti.",
+                aff_point_2: "<strong>Efisiensi Biaya:</strong> Mengalihkan anggaran dari biaya tetap tinggi ke kinerja berbasis komisi (CPA).",
+                aff_point_3: "<strong>Platform Agnostik:</strong> Penerapan cepat di TikTok Shop, Shopee Video, dan IG Reels.",
+                aff_sim_title: "Simulator Pertumbuhan Afiliasi",
+                aff_sim_label_1: "Nano-Afiliasi Aktif",
+                aff_sim_label_2: "Rata-rata Tingkat Konversi (%)",
+                aff_sim_result: "Proyeksi Pendapatan Bulanan",
+                aff_chart_title: "Efisiensi Corong: Strategi Makro vs. Nano",
+                aff_chart_note: "Data dimodelkan berdasarkan rata-rata industri 2024 untuk sektor FMCG/Kecantikan di Indonesia.",
+                ai_title: "Video AI: Pendorong GMV Max",
+                ai_desc: "Untuk mendominasi \"Shoppertainment,\" volume dan relevansi adalah kunci. Kami mengusulkan <strong>Mesin Konten AI-First</strong> yang menghasilkan video produk berkualitas tinggi yang disesuaikan dengan demografi, dialek, dan tren tertentu.",
+                ai_panel_title: "Metrik Produksi",
+                ai_panel_desc: "Pilih mode produksi untuk melihat dampak pada biaya dan kecepatan output untuk kampanye 1 bulan.",
+                ai_btn_1_title: "Agensi Tradisional",
+                ai_btn_1_badge: "Dasar",
+                ai_btn_1_desc: "Kualitas tinggi, proses lambat, biaya tinggi.",
+                ai_btn_2_title: "Model Hibrida",
+                ai_btn_2_badge: "Optimal",
+                ai_btn_2_desc: "Kreatif manusia + alat pengeditan AI.",
+                ai_btn_3_title: "Mesin AI-Native",
+                ai_btn_3_badge: "Target 2026",
+                ai_btn_3_desc: "Avatar generatif, suara sintetis, A/B otomatis.",
+                ai_chart_title: "Perbandingan Efisiensi",
+                ai_legend_cost: "Biaya (Juta IDR)",
+                ai_legend_vol: "Video Diproduksi",
+                res_title: "Riset GMV MaxStart",
+                res_desc: "Meluncurkan produk tanpa data adalah perjudian. <strong>GMV MaxStart</strong> adalah kerangka kerja riset kami. Dengan mengambil data pasar (titik harga, volume kata kunci, sentimen), kami mengidentifikasi peluang \"Blue Ocean\" untuk merek KAO sebelum hari peluncuran.",
+                res_metric_title: "Metrik Utama: Skor Peluang",
+                res_calc: "Dihitung melalui:",
+                res_btn_skin: "Perawatan Kulit (Biore)",
+                res_btn_home: "Perawatan Rumah (Attack)",
+                res_btn_all: "Tampilkan Semua",
+                res_chart_title: "Matriks Peluang Pasar",
+                res_chart_axes: "Sumbu Y: Volume Pencarian Bulanan | Sumbu X: Harga Pasar Rata-rata (IDR) | Ukuran Gelembung: Potensi Pendapatan",
+                sum_title: "Proyeksi Dampak 2026",
+                sum_desc: "Dengan menyinergikan ketiga pilar ini, kami memproyeksikan peningkatan GMV kumulatif sebesar <span class=\"text-green-400 font-bold\">32%</span> YoY, melampaui pertumbuhan rata-rata kategori sebesar 12%.",
+                sum_stat_1_label: "Estimasi GMV 2026",
+                sum_stat_1_sub: "▲ 32% vs Dasar 2025",
+                sum_stat_2_label: "Rasio Biaya Pemasaran",
+                sum_stat_2_sub: "▼ 3.5% Keuntungan Efisiensi (via AI)",
+                btn_download: "Unduh Dek Eksekutif Lengkap",
+                footer_note: "Proposal Rahasia untuk KAO Indonesia. Dibuat untuk Siklus Perencanaan 2026."
+            }
+        };
+
+        let currentLang = 'en';
+
+        function setLanguage(lang) {
+            currentLang = lang;
             
-            const payload = {
-                contents: [{ parts: [{ text: prompt }] }],
-                systemInstruction: { parts: [{ text: systemInstruction }] }
-            };
+            // Update Text
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if(translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
 
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+            // Update Buttons State
+            document.getElementById('btn-en').className = lang === 'en' ? 'lang-btn active text-slate-500 hover:text-slate-800' : 'lang-btn text-slate-500 hover:text-slate-800';
+            document.getElementById('btn-id').className = lang === 'id' ? 'lang-btn active text-slate-500 hover:text-slate-800' : 'lang-btn text-slate-500 hover:text-slate-800';
 
-                if (!response.ok) throw new Error(`API Error: ${response.status}`);
-                
-                const data = await response.json();
-                return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
-            } catch (error) {
-                console.error("Gemini API Error:", error);
-                return "Error connecting to AI service. Please try again later.";
+            // Update Charts
+            updateChartsLanguage(lang);
+        }
+
+        function updateChartsLanguage(lang) {
+            // Affiliate Chart
+            if(affiliateChartInstance) {
+                affiliateChartInstance.data.labels = lang === 'en' 
+                    ? ['Total Impressions', 'Engagement (Clicks)', 'Conversions (Sales)'] 
+                    : ['Total Impresi', 'Keterlibatan (Klik)', 'Konversi (Penjualan)'];
+                affiliateChartInstance.data.datasets[0].label = lang === 'en'
+                    ? 'Nano-Affiliate Network Performance'
+                    : 'Kinerja Jaringan Nano-Afiliasi';
+                affiliateChartInstance.update();
+            }
+
+            // AI Chart
+            if(aiChartInstance) {
+                aiChartInstance.data.labels = lang === 'en'
+                    ? ['Cost (IDR Million)', 'Video Output Volume']
+                    : ['Biaya (Juta IDR)', 'Volume Output Video'];
+                aiChartInstance.options.plugins.title.text = lang === 'en'
+                    ? 'Performance per Month'
+                    : 'Kinerja per Bulan';
+                aiChartInstance.update();
+            }
+
+            // Research Plot (Plotly)
+            const researchLayout = document.getElementById('researchPlot').layout;
+            if(researchLayout) {
+                const update = {
+                    'xaxis.title.text': lang === 'en' ? 'Average Price (IDR)' : 'Harga Rata-rata (IDR)',
+                    'yaxis.title.text': lang === 'en' ? 'Monthly Search Volume' : 'Volume Pencarian Bulanan'
+                };
+                Plotly.relayout('researchPlot', update);
+            }
+
+            // Growth Chart
+            if(growthChartInstance) {
+                growthChartInstance.data.datasets[0].label = lang === 'en' ? 'Projected GMV (With Strategies)' : 'Proyeksi GMV (Dengan Strategi)';
+                growthChartInstance.data.datasets[1].label = lang === 'en' ? 'Baseline (Organic)' : 'Dasar (Organik)';
+                growthChartInstance.update();
             }
         }
 
-        // --- GEMINI FEATURE 1: SCRIPT GENERATOR ---
-        async function generateScript() {
-            const product = document.getElementById('script-product').value || "Biore UV Aqua Rich";
-            const audience = document.getElementById('script-audience').value || "Gen-Z";
-            const outputDiv = document.getElementById('script-output');
-            
-            outputDiv.innerHTML = '<div class="loading-pulse">Generating viral script...</div>';
-            
-            const systemPrompt = "You are a creative director for TikTok/Reels content at KAO Indonesia. Write short, punchy, viral scripts.";
-            const userPrompt = `Write a 15-second TikTok video script for ${product} targeting ${audience}.
-            Format:
-            [Scene: Visual description]
-            (Audio: Sound effect/Music vibe)
-            Voiceover: "Spoken text"
-            
-            Include a catchy hook in the first 3 seconds.`;
 
-            const result = await callGemini(userPrompt, systemPrompt);
-            outputDiv.innerText = result;
-        }
+        // --- EXISTING LOGIC ---
 
-        // --- GEMINI FEATURE 2: STRATEGY GENERATOR ---
-        async function generateStrategy() {
-            const topic = document.getElementById('strategy-topic').value || "New Product Idea";
-            const outputDiv = document.getElementById('strategy-output');
-            
-            outputDiv.innerHTML = '<div class="loading-pulse">Analyzing market opportunity...</div>';
-            
-            const systemPrompt = "You are a Senior eCommerce Strategist for KAO Indonesia. You provide concise, data-driven launch strategies.";
-            const userPrompt = `Analyze the market opportunity for this concept: "${topic}".
-            Provide a 3-point launch strategy:
-            1. Target Persona (Be specific)
-            2. Unique Selling Proposition (USP)
-            3. Key Marketing Hook (One sentence)
-            
-            Keep it professional but innovative.`;
-
-            const result = await callGemini(userPrompt, systemPrompt);
-            outputDiv.innerText = result;
-        }
-
-
-        // --- EXISTING CHART LOGIC ---
-
-        // --- 1. Affiliate Strategy Logic ---
+        // 1. Affiliate Strategy
         const affiliateSlider = document.getElementById('affiliate-slider');
         const countDisplay = document.getElementById('affiliate-count-val');
         const convSlider = document.getElementById('conv-slider');
         const convDisplay = document.getElementById('conv-rate-val');
         const revDisplay = document.getElementById('proj-rev-val');
         let affiliateChartInstance = null;
+        let growthChartInstance = null; // Declare global
 
         const avgTrafficPerAffiliate = 500; 
         const aov = 75000; 
@@ -540,7 +580,7 @@
                     indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { return context.parsed.x.toLocaleString() + ' Users'; } } } },
                     scales: { x: { grid: { display: false } }, y: { grid: { display: false } } }
                 }
             });
@@ -566,19 +606,17 @@
             affiliateChartInstance.data.datasets[0].data = [impressions, totalClicks, conversions];
             affiliateChartInstance.update();
         }
-
         affiliateSlider.addEventListener('input', updateAffiliateCalc);
         convSlider.addEventListener('input', updateAffiliateCalc);
 
 
-        // --- 2. AI Video Logic ---
+        // 2. AI Video Logic
         let aiChartInstance = null;
         const aiData = {
             'traditional': { cost: 150, videos: 5 },
             'hybrid': { cost: 120, videos: 25 },
             'ai-native': { cost: 80, videos: 150 }
         };
-
         function initAIChart() {
             const ctx = document.getElementById('aiVideoChart').getContext('2d');
             aiChartInstance = new Chart(ctx, {
@@ -587,7 +625,7 @@
                     labels: ['Cost (IDR Million)', 'Video Output Volume'],
                     datasets: [{
                         label: 'Metric',
-                        data: [150, 5], 
+                        data: [150, 5],
                         backgroundColor: ['rgba(168, 85, 247, 0.7)', 'rgba(45, 212, 191, 0.7)'],
                         borderColor: ['rgba(168, 85, 247, 1)', 'rgba(45, 212, 191, 1)'],
                         borderWidth: 1
@@ -596,12 +634,11 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: { legend: { display: false }, title: { display: true, text: 'Performance per Month' } },
                     scales: { y: { beginAtZero: true } }
                 }
             });
         }
-
         function updateAIChart(mode) {
             document.querySelectorAll('.ai-btn').forEach(btn => {
                 btn.classList.remove('bg-gray-50', 'ring-2', 'ring-purple-200', 'border-purple-500');
@@ -616,8 +653,7 @@
             aiChartInstance.update();
         }
 
-
-        // --- 3. GMV MaxStart Research (Plotly) ---
+        // 3. Research Logic
         const researchData = [
             { x: 45000, y: 150000, r: 25, cat: 'Skin', name: 'UV Mist (Viral)' },
             { x: 32000, y: 80000, r: 15, cat: 'Skin', name: 'Facial Foam' },
@@ -628,21 +664,13 @@
             { x: 120000, y: 10000, r: 5, cat: 'Gap', name: 'Premium Enzyme Wash' },
             { x: 65000, y: 90000, r: 20, cat: 'Gap', name: 'Eco-Concentrate' }
         ];
-
-        function initResearchPlot() {
-            drawPlot('All');
-        }
-
-        function filterResearch(category) {
-            drawPlot(category);
-        }
-
+        function initResearchPlot() { drawPlot('All'); }
+        function filterResearch(category) { drawPlot(category); }
         function drawPlot(filter) {
             const filtered = filter === 'All' ? researchData : researchData.filter(d => d.cat === filter || d.cat === 'Gap');
             const traces = [];
             const categories = ['Skin', 'Home', 'Gap'];
             const colors = { 'Skin': '#ec4899', 'Home': '#3b82f6', 'Gap': '#eab308' };
-
             categories.forEach(cat => {
                 if (filter !== 'All' && filter !== cat && cat !== 'Gap') return;
                 const catData = filtered.filter(d => d.cat === cat);
@@ -652,16 +680,11 @@
                     y: catData.map(d => d.y),
                     text: catData.map(d => d.name),
                     mode: 'markers',
-                    marker: {
-                        size: catData.map(d => d.r * 2),
-                        color: colors[cat],
-                        opacity: 0.7
-                    },
+                    marker: { size: catData.map(d => d.r * 2), color: colors[cat], opacity: 0.7 },
                     name: cat === 'Gap' ? 'Market Gap' : cat + ' Care',
                     type: 'scatter'
                 });
             });
-
             const layout = {
                 margin: { t: 20, r: 20, b: 40, l: 50 },
                 xaxis: { title: 'Average Price (IDR)', showgrid: true, gridcolor: '#f1f5f9' },
@@ -671,15 +694,13 @@
                 showlegend: true,
                 legend: { orientation: 'h', y: -0.2 }
             };
-
             Plotly.newPlot('researchPlot', traces, layout, {displayModeBar: false, responsive: true});
         }
 
-
-        // --- 4. Summary Chart ---
+        // 4. Summary Chart
         function initGrowthChart() {
             const ctx = document.getElementById('growthChart').getContext('2d');
-            new Chart(ctx, {
+            growthChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: ['Q1 2025', 'Q2 2025', 'Q3 2025', 'Q4 2025', 'Q1 2026', 'Q2 2026', 'Q3 2026', 'Q4 2026'],
@@ -721,14 +742,12 @@
             if(el) el.scrollIntoView({behavior: 'smooth'});
         }
 
-        // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
             initAffiliateChart();
             initAIChart();
             initResearchPlot();
             initGrowthChart();
         });
-
     </script>
 </body>
 </html>
