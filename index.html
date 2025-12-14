@@ -91,29 +91,6 @@
             color: #00A651;
             text-decoration: underline;
         }
-
-        /* AI Output Box Styling */
-        .ai-output-box {
-            position: relative;
-        }
-        .ai-output-box::before {
-            content: "GEMINI AI GENERATED";
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            font-size: 0.6rem;
-            font-weight: bold;
-            color: #94a3b8;
-            opacity: 0.5;
-            pointer-events: none;
-        }
-        .loading-pulse {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: .5; }
-        }
     </style>
 </head>
 <body class="antialiased">
@@ -256,7 +233,7 @@
 
             <div class="grid lg:grid-cols-3 gap-8">
                 <div class="lg:col-span-1 space-y-4">
-                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm h-full">
                         <h3 class="font-bold text-slate-800 mb-4 border-b pb-2" data-i18n="ai_panel_title">Production Metrics</h3>
                         <p class="text-sm text-gray-500 mb-6" data-i18n="ai_panel_desc">Select a production mode to see the impact on cost and output velocity for a 1-month campaign.</p>
                         
@@ -288,8 +265,8 @@
                     </div>
                 </div>
 
-                <div class="lg:col-span-2 space-y-6">
-                    <div class="chart-container-wrapper">
+                <div class="lg:col-span-2">
+                    <div class="chart-container-wrapper h-full">
                         <div class="flex justify-between w-full items-center mb-4">
                             <h4 class="text-lg font-semibold text-slate-800" data-i18n="ai_chart_title">Efficiency Comparison</h4>
                             <div class="flex gap-2 text-xs">
@@ -299,31 +276,6 @@
                         </div>
                         <div class="chart-canvas-box">
                             <canvas id="aiVideoChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- GEMINI API INTEGRATION 1: SCRIPT GENERATOR -->
-                    <div class="bg-gradient-to-r from-purple-50 to-white p-6 rounded-xl border border-purple-100 shadow-sm">
-                        <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
-                            <span class="text-xl">✨</span> <span data-i18n="ai_demo_title">Live Demo: AI Script Generator</span>
-                        </h3>
-                        <p class="text-sm text-slate-600 mb-4" data-i18n="ai_demo_desc">Experience the "Content Engine" now. Generate a viral-optimized script for a KAO product instantly using Gemini.</p>
-                        
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div class="space-y-3">
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-500 mb-1" data-i18n="ai_demo_label_prod">Product</label>
-                                    <input type="text" id="script-product" placeholder="e.g. Biore UV Aqua Rich" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-purple-200 focus:border-purple-400 outline-none transition" data-i18n-ph="ai_demo_ph_prod">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-500 mb-1" data-i18n="ai_demo_label_aud">Target Audience / Angle</label>
-                                    <input type="text" id="script-audience" placeholder="e.g. Gamers who hate sticky skin" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-purple-200 focus:border-purple-400 outline-none transition" data-i18n-ph="ai_demo_ph_aud">
-                                </div>
-                                <button onclick="generateScript()" class="w-full bg-purple-600 text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-purple-700 transition shadow-md shadow-purple-500/20 flex justify-center items-center gap-2">
-                                    <span data-i18n="ai_demo_btn">✨ Generate Script</span>
-                                </button>
-                            </div>
-                            <div id="script-output" class="ai-output-box bg-white p-4 rounded-lg border border-gray-200 text-xs text-slate-600 h-48 overflow-y-auto whitespace-pre-wrap leading-relaxed" data-i18n="ai_demo_output_placeholder">Generated script will appear here...</div>
                         </div>
                     </div>
                 </div>
@@ -356,30 +308,10 @@
                 </div>
             </div>
 
-            <div class="space-y-6">
-                <div class="chart-container-wrapper">
-                    <h4 class="text-lg font-semibold text-slate-800 mb-2 w-full" data-i18n="res_chart_title">Market Opportunity Matrix</h4>
-                    <p class="text-sm text-gray-500 mb-4 w-full" data-i18n="res_chart_axes">Y-Axis: Monthly Search Volume | X-Axis: Avg Market Price (IDR) | Bubble Size: Revenue Potential</p>
-                    <div id="researchPlot" class="w-full h-[450px]"></div>
-                </div>
-
-                <!-- GEMINI API INTEGRATION 2: STRATEGY ANALYZER -->
-                <div class="bg-gradient-to-r from-amber-50 to-white p-6 rounded-xl border border-amber-100 shadow-sm">
-                    <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
-                        <span class="text-xl">✨</span> <span data-i18n="res_demo_title">MaxStart Opportunity Analyzer</span>
-                    </h3>
-                    <p class="text-sm text-slate-600 mb-4" data-i18n="res_demo_desc">Simulate the "Predictive Intelligence" layer. Enter a market gap or product concept, and Gemini will generate a rapid launch strategy.</p>
-                    
-                    <div class="flex flex-col md:flex-row gap-4">
-                         <div class="flex-1">
-                             <input type="text" id="strategy-topic" placeholder="e.g. Eco-friendly liquid detergent for sensitive skin" class="w-full h-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-amber-200 focus:border-amber-400 outline-none transition" data-i18n-ph="res_demo_ph_topic">
-                         </div>
-                         <button onclick="generateStrategy()" class="bg-amber-600 text-white px-8 py-3 rounded-lg text-sm font-semibold hover:bg-amber-700 transition shadow-md shadow-amber-500/20 whitespace-nowrap flex items-center gap-2 justify-center">
-                             <span data-i18n="res_demo_btn">✨ Analyze Opportunity</span>
-                         </button>
-                    </div>
-                    <div id="strategy-output" class="ai-output-box mt-4 bg-white p-6 rounded-lg border border-gray-200 text-sm text-slate-700 min-h-[120px] whitespace-pre-wrap leading-relaxed" data-i18n="res_demo_output_placeholder">Strategic analysis will appear here...</div>
-                </div>
+            <div class="chart-container-wrapper">
+                <h4 class="text-lg font-semibold text-slate-800 mb-2 w-full" data-i18n="res_chart_title">Market Opportunity Matrix</h4>
+                <p class="text-sm text-gray-500 mb-4 w-full" data-i18n="res_chart_axes">Y-Axis: Monthly Search Volume | X-Axis: Avg Market Price (IDR) | Bubble Size: Revenue Potential</p>
+                <div id="researchPlot" class="w-full h-[450px]"></div>
             </div>
         </section>
 
@@ -429,77 +361,6 @@
 
     <!-- Scripts -->
     <script>
-        // --- GEMINI API CONFIGURATION ---
-        const apiKey = "AIzaSyDOeRb3aLenWuKr0eYP7PSohol8KxH-aC0"; // System will provide key at runtime
-        
-        async function callGemini(prompt, systemInstruction = "") {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            
-            const payload = {
-                contents: [{ parts: [{ text: prompt }] }],
-                systemInstruction: { parts: [{ text: systemInstruction }] }
-            };
-
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) throw new Error(`API Error: ${response.status}`);
-                
-                const data = await response.json();
-                return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
-            } catch (error) {
-                console.error("Gemini API Error:", error);
-                return "Error connecting to AI service. Please try again later.";
-            }
-        }
-
-        // --- GEMINI FEATURE 1: SCRIPT GENERATOR ---
-        async function generateScript() {
-            const product = document.getElementById('script-product').value || "Biore UV Aqua Rich";
-            const audience = document.getElementById('script-audience').value || "Gen-Z";
-            const outputDiv = document.getElementById('script-output');
-            
-            const loadingText = currentLang === 'en' ? 'Generating viral script...' : 'Sedang membuat skrip viral...';
-            outputDiv.innerHTML = `<div class="loading-pulse">${loadingText}</div>`;
-            
-            const systemPrompt = "You are a creative director for TikTok/Reels content at KAO Indonesia. Write short, punchy, viral scripts.";
-            const userPrompt = `Write a 15-second TikTok video script for ${product} targeting ${audience}.
-            Format:
-            [Scene: Visual description]
-            (Audio: Sound effect/Music vibe)
-            Voiceover: "Spoken text"
-            
-            Include a catchy hook in the first 3 seconds.`;
-
-            const result = await callGemini(userPrompt, systemPrompt);
-            outputDiv.innerText = result;
-        }
-
-        // --- GEMINI FEATURE 2: STRATEGY GENERATOR ---
-        async function generateStrategy() {
-            const topic = document.getElementById('strategy-topic').value || "New Product Idea";
-            const outputDiv = document.getElementById('strategy-output');
-            
-            const loadingText = currentLang === 'en' ? 'Analyzing market opportunity...' : 'Sedang menganalisis peluang pasar...';
-            outputDiv.innerHTML = `<div class="loading-pulse">${loadingText}</div>`;
-            
-            const systemPrompt = "You are a Senior eCommerce Strategist for KAO Indonesia. You provide concise, data-driven launch strategies.";
-            const userPrompt = `Analyze the market opportunity for this concept: "${topic}".
-            Provide a 3-point launch strategy:
-            1. Target Persona (Be specific)
-            2. Unique Selling Proposition (USP)
-            3. Key Marketing Hook (One sentence)
-            
-            Keep it professional but innovative.`;
-
-            const result = await callGemini(userPrompt, systemPrompt);
-            outputDiv.innerText = result;
-        }
-
         // --- TRANSLATION DATA ---
         const translations = {
             en: {
@@ -544,17 +405,6 @@
                 ai_chart_title: "Efficiency Comparison",
                 ai_legend_cost: "Cost (IDR Mio)",
                 ai_legend_vol: "Videos Produced",
-                
-                // Gemini Feature Keys (EN)
-                ai_demo_title: "Live Demo: AI Script Generator",
-                ai_demo_desc: "Experience the \"Content Engine\" now. Generate a viral-optimized script for a KAO product instantly using Gemini.",
-                ai_demo_label_prod: "Product",
-                ai_demo_ph_prod: "e.g. Biore UV Aqua Rich",
-                ai_demo_label_aud: "Target Audience / Angle",
-                ai_demo_ph_aud: "e.g. Gamers who hate sticky skin",
-                ai_demo_btn: "✨ Generate Script",
-                ai_demo_output_placeholder: "Generated script will appear here...",
-
                 res_title: "GMV MaxStart Research",
                 res_desc: "Launching a product without data is a gamble. <strong>GMV MaxStart</strong> is our proprietary research framework. By scraping marketplace data (price points, keyword volume, sentiment), we identify \"Blue Ocean\" opportunities for KAO brands before launch day.",
                 res_metric_title: "Key Metric: Opportunity Score",
@@ -564,14 +414,6 @@
                 res_btn_all: "Show All",
                 res_chart_title: "Market Opportunity Matrix",
                 res_chart_axes: "Y-Axis: Monthly Search Volume | X-Axis: Avg Market Price (IDR) | Bubble Size: Revenue Potential",
-                
-                // Gemini Feature Keys 2 (EN)
-                res_demo_title: "MaxStart Opportunity Analyzer",
-                res_demo_desc: "Simulate the \"Predictive Intelligence\" layer. Enter a market gap or product concept, and Gemini will generate a rapid launch strategy.",
-                res_demo_ph_topic: "e.g. Eco-friendly liquid detergent for sensitive skin",
-                res_demo_btn: "✨ Analyze Opportunity",
-                res_demo_output_placeholder: "Strategic analysis will appear here...",
-
                 sum_title: "2026 Projected Impact",
                 sum_desc: "By synergizing these three pillars, we project a cumulative GMV uplift of <span class=\"text-green-400 font-bold\">32%</span> YoY, outpacing the category average growth of 12%.",
                 sum_stat_1_label: "Estimated 2026 GMV",
@@ -623,17 +465,6 @@
                 ai_chart_title: "Perbandingan Efisiensi",
                 ai_legend_cost: "Biaya (Juta IDR)",
                 ai_legend_vol: "Video Diproduksi",
-
-                // Gemini Feature Keys (ID)
-                ai_demo_title: "Demo Langsung: Generator Skrip AI",
-                ai_demo_desc: "Rasakan \"Mesin Konten\" sekarang. Buat skrip viral untuk produk KAO secara instan menggunakan Gemini.",
-                ai_demo_label_prod: "Produk",
-                ai_demo_ph_prod: "cth. Biore UV Aqua Rich",
-                ai_demo_label_aud: "Target Audiens / Sudut Pandang",
-                ai_demo_ph_aud: "cth. Gamer yang benci kulit lengket",
-                ai_demo_btn: "✨ Buat Skrip",
-                ai_demo_output_placeholder: "Skrip yang dibuat akan muncul di sini...",
-
                 res_title: "Riset GMV MaxStart",
                 res_desc: "Meluncurkan produk tanpa data adalah perjudian. <strong>GMV MaxStart</strong> adalah kerangka kerja riset kami. Dengan mengambil data pasar (titik harga, volume kata kunci, sentimen), kami mengidentifikasi peluang \"Blue Ocean\" untuk merek KAO sebelum hari peluncuran.",
                 res_metric_title: "Metrik Utama: Skor Peluang",
@@ -643,14 +474,6 @@
                 res_btn_all: "Tampilkan Semua",
                 res_chart_title: "Matriks Peluang Pasar",
                 res_chart_axes: "Sumbu Y: Volume Pencarian Bulanan | Sumbu X: Harga Pasar Rata-rata (IDR) | Ukuran Gelembung: Potensi Pendapatan",
-                
-                // Gemini Feature Keys 2 (ID)
-                res_demo_title: "Penganalisis Peluang MaxStart",
-                res_demo_desc: "Simulasikan lapisan \"Kecerdasan Prediktif\". Masukkan celah pasar atau konsep produk, dan Gemini akan membuat strategi peluncuran cepat.",
-                res_demo_ph_topic: "cth. Deterjen cair ramah lingkungan untuk kulit sensitif",
-                res_demo_btn: "✨ Analisis Peluang",
-                res_demo_output_placeholder: "Analisis strategis akan muncul di sini...",
-
                 sum_title: "Proyeksi Dampak 2026",
                 sum_desc: "Dengan menyinergikan ketiga pilar ini, kami memproyeksikan peningkatan GMV kumulatif sebesar <span class=\"text-green-400 font-bold\">32%</span> YoY, melampaui pertumbuhan rata-rata kategori sebesar 12%.",
                 sum_stat_1_label: "Estimasi GMV 2026",
@@ -667,19 +490,11 @@
         function setLanguage(lang) {
             currentLang = lang;
             
-            // Update Text content
+            // Update Text
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if(translations[lang][key]) {
                     el.innerHTML = translations[lang][key];
-                }
-            });
-
-            // Update Placeholders
-            document.querySelectorAll('[data-i18n-ph]').forEach(el => {
-                const key = el.getAttribute('data-i18n-ph');
-                if(translations[lang][key]) {
-                    el.placeholder = translations[lang][key];
                 }
             });
 
